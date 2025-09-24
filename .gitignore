@@ -116,3 +116,4 @@ sessions/
 # Render deployment files (keep these)
 !Procfile
 !render.yaml
+!build.sh

@@ -11,7 +11,11 @@ app = Flask(__name__)
 # Database configuration for production and development
 if os.environ.get('DATABASE_URL'):
     # Production: Use PostgreSQL on Render
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    database_url = os.environ.get('DATABASE_URL')
+    # Fix for newer SQLAlchemy versions
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
     # Development: Use SQLite in current directory
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -189,17 +193,18 @@ api.add_resource(TicketById, '/tickets/<int:id>')
 api.add_resource(UserTickets, '/users/<int:user_id>/tickets')
 api.add_resource(UserEvents, '/users/<int:user_id>/events')
 
-# Initialize database tables
-with app.app_context():
-    try:
-        db.create_all()
-        # Create default admin if no users exist
-        if User.query.count() == 0:
-            admin = User(name="Admin User", email="admin@example.com", password="admin123", role="admin")
-            db.session.add(admin)
-            db.session.commit()
-    except Exception as e:
-        print(f"Database initialization error: {e}")
+# Initialize database tables (only in development)
+if not os.environ.get('DATABASE_URL'):
+    with app.app_context():
+        try:
+            db.create_all()
+            # Create default admin if no users exist
+            if User.query.count() == 0:
+                admin = User(name="Admin User", email="admin@example.com", password="admin123", role="admin")
+                db.session.add(admin)
+                db.session.commit()
+        except Exception as e:
+            print(f"Database initialization error: {e}")
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
