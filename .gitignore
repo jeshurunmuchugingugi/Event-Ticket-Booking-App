@@ -2,8 +2,13 @@
 *.db
 *.sqlite
 *.sqlite3
-instance/
-server/instance/
+# Keep instance directory but ignore database files
+instance/*.db
+instance/*.sqlite
+instance/*.sqlite3
+server/instance/*.db
+server/instance/*.sqlite
+server/instance/*.sqlite3
 
 # Environment variables
 .env
