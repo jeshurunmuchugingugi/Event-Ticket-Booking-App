@@ -112,3 +112,7 @@ sessions/
 # Production builds with sensitive data
 /client/build/static/js/*.map
 /client/build/static/css/*.map
+
+# Render deployment files (keep these)
+!Procfile
+!render.yaml

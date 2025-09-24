@@ -8,9 +8,14 @@ from datetime import datetime
 import os
 
 app = Flask(__name__)
-# Ensure instance directory exists
-os.makedirs('instance', exist_ok=True)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/app.db'
+# Database configuration for production and development
+if os.environ.get('DATABASE_URL'):
+    # Production: Use PostgreSQL on Render
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+else:
+    # Development: Use SQLite
+    os.makedirs('instance', exist_ok=True)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///instance/app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 app.json.compact = False
@@ -185,5 +190,15 @@ api.add_resource(TicketById, '/tickets/<int:id>')
 api.add_resource(UserTickets, '/users/<int:user_id>/tickets')
 api.add_resource(UserEvents, '/users/<int:user_id>/events')
 
+# Initialize database tables
+with app.app_context():
+    db.create_all()
+    # Create default admin if no users exist
+    if User.query.count() == 0:
+        admin = User(name="Admin User", email="admin@example.com", password="admin123", role="admin")
+        db.session.add(admin)
+        db.session.commit()
+
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)
