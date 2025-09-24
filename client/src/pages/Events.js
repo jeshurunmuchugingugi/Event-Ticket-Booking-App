@@ -40,7 +40,8 @@ function Events({ user }) {
   }, [events, searchTerm, selectedCategory]);
 
   const fetchEvents = async () => {
-    const response = await fetch('/events');
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    const response = await fetch(`${API_URL}/events`);
     const data = await response.json();
     setEvents(data);
     setFilteredEvents(data);
@@ -48,7 +49,8 @@ function Events({ user }) {
 
   const handleCreateEvent = async (values, { setSubmitting, resetForm }) => {
     try {
-      const response = await fetch('/events', {
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const response = await fetch(`${API_URL}/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...values, created_by: user.id })
@@ -67,7 +69,8 @@ function Events({ user }) {
 
   const handleDeleteEvent = async (eventId) => {
     try {
-      const response = await fetch(`/events/${eventId}`, {
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const response = await fetch(`${API_URL}/events/${eventId}`, {
         method: 'DELETE'
       });
       
@@ -86,7 +89,8 @@ function Events({ user }) {
 
   const handleUpdateEvent = async (values, { setSubmitting, resetForm }) => {
     try {
-      const response = await fetch(`/events/${editingEvent.id}`, {
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const response = await fetch(`${API_URL}/events/${editingEvent.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values)

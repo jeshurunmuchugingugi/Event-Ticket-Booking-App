@@ -16,7 +16,8 @@ function Navbar({ user, onLogout }) {
 
   const fetchTicketCount = async () => {
     try {
-      const response = await fetch(`/users/${user.id}/tickets`);
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const response = await fetch(`${API_URL}/users/${user.id}/tickets`);
       const tickets = await response.json();
       setTicketCount(tickets.length);
     } catch (error) {
