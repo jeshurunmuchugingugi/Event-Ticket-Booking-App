@@ -9,6 +9,26 @@ function Profile({ user }) {
     if (user.role === 'admin') {
       fetchUserEvents();
     }
+
+    // Listen for ticket booking events for real-time updates
+    const handleTicketBooked = () => {
+      fetchUserTickets();
+    };
+    
+    window.addEventListener('ticketBooked', handleTicketBooked);
+    
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(() => {
+      fetchUserTickets();
+      if (user.role === 'admin') {
+        fetchUserEvents();
+      }
+    }, 30000);
+
+    return () => {
+      window.removeEventListener('ticketBooked', handleTicketBooked);
+      clearInterval(interval);
+    };
   }, [user.id, user.role]);
 
   const fetchUserTickets = async () => {
