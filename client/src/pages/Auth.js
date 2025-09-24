@@ -125,7 +125,7 @@ function Auth({ onLogin }) {
           </Formik>
         ) : (
           <Formik
-            initialValues={{ name: '', email: '', password: '', role: 'customer' }}
+            initialValues={{ name: '', email: '', password: '', role: '' }}
             validationSchema={SignupSchema}
             onSubmit={handleSignup}
           >
@@ -149,6 +149,7 @@ function Auth({ onLogin }) {
                 <div className="form-group">
                   <label htmlFor="role">Role</label>
                   <Field as="select" name="role">
+                    <option value="">Select Role</option>
                     <option value="customer">Customer</option>
                     <option value="admin">Admin</option>
                   </Field>
