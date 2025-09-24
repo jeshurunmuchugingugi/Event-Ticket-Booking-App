@@ -88,7 +88,7 @@ A full-stack web application for event management and ticket booking built with 
 - `POST /tickets` - Book ticket
 - `DELETE /tickets/:id` - Cancel ticket
 
-## Models
+
 
 ### User
 - id, name, email, role (admin/customer)
