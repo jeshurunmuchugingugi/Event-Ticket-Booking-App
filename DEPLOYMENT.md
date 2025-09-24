@@ -13,6 +13,31 @@
    - `SECRET_KEY` - Flask secret (auto-generated)
    - `PORT` - Server port (auto-configured)
 
+## DATABASE_URL Configuration
+
+On Render, the environment variable `DATABASE_URL` tells your Flask backend how to connect to the database. Its value depends on which database you're using:
+
+### PostgreSQL (Recommended for Production)
+```
+DATABASE_URL=postgresql://username:password@hostname:port/database_name
+```
+Example:
+```
+DATABASE_URL=postgresql://user:pass123@dpg-abc123-a.oregon-postgres.render.com:5432/myapp_db
+```
+
+### SQLite (Development Only)
+```
+DATABASE_URL=sqlite:///app.db
+```
+
+### MySQL (Alternative)
+```
+DATABASE_URL=mysql://username:password@hostname:port/database_name
+```
+
+**Note:** Render automatically generates the PostgreSQL `DATABASE_URL` when you create a PostgreSQL service. Your Flask app detects this and switches from SQLite (development) to PostgreSQL (production) automatically.
+
 3. **Test Backend**
    - Visit: `https://your-backend.onrender.com/health`
    - Should return: `{"status": "healthy"}`
@@ -43,6 +68,8 @@
 - Check Render logs for backend service
 - Verify `/health` endpoint works
 - Ensure PostgreSQL database is connected
+- Verify `DATABASE_URL` environment variable is set
+- Check database connection in logs
 
 ### Frontend Issues:
 - Verify `REACT_APP_API_URL` is set correctly

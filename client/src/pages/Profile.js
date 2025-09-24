@@ -5,18 +5,6 @@ function Profile({ user }) {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    const fetchUserTickets = async () => {
-      const response = await fetch(`/users/${user.id}/tickets`);
-      const data = await response.json();
-      setTickets(data);
-    };
-
-    const fetchUserEvents = async () => {
-      const response = await fetch(`/users/${user.id}/events`);
-      const data = await response.json();
-      setEvents(data);
-    };
-
     fetchUserTickets();
     if (user.role === 'admin') {
       fetchUserEvents();
@@ -24,14 +12,23 @@ function Profile({ user }) {
   }, [user.id, user.role]);
 
   const fetchUserTickets = async () => {
-    const response = await fetch(`/users/${user.id}/tickets`);
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    const response = await fetch(`${API_URL}/api/users/${user.id}/tickets`);
     const data = await response.json();
     setTickets(data);
   };
 
+  const fetchUserEvents = async () => {
+    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    const response = await fetch(`${API_URL}/api/users/${user.id}/events`);
+    const data = await response.json();
+    setEvents(data);
+  };
+
   const handleCancelTicket = async (ticketId) => {
     try {
-      const response = await fetch(`/tickets/${ticketId}`, {
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const response = await fetch(`${API_URL}/api/tickets/${ticketId}`, {
         method: 'DELETE'
       });
       
