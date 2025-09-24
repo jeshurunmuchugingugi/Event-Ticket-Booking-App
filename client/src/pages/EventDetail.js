@@ -11,7 +11,7 @@ function EventDetail({ user }) {
   useEffect(() => {
     const fetchEvent = async () => {
       const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
-      const response = await fetch(`${API_URL}/events/${id}`);
+      const response = await fetch(`${API_URL}/api/events/${id}`);
       const data = await response.json();
       setEvent(data);
     };
@@ -21,7 +21,7 @@ function EventDetail({ user }) {
   const handleBookTicket = async () => {
     try {
       const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
-      const response = await fetch(`${API_URL}/tickets`, {
+      const response = await fetch(`${API_URL}/api/tickets`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

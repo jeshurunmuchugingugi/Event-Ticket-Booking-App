@@ -184,14 +184,14 @@ class UserEvents(Resource):
         events = Event.query.filter_by(created_by=user_id).all()
         return [{'id': e.id, 'title': e.title, 'date': e.date.isoformat(), 'location': e.location, 'description': e.description, 'price': e.price, 'category': e.category, 'image': e.image} for e in events]
 
-api.add_resource(Users, '/users')
-api.add_resource(Login, '/login')
-api.add_resource(Events, '/events')
-api.add_resource(EventById, '/events/<int:id>')
-api.add_resource(Tickets, '/tickets')
-api.add_resource(TicketById, '/tickets/<int:id>')
-api.add_resource(UserTickets, '/users/<int:user_id>/tickets')
-api.add_resource(UserEvents, '/users/<int:user_id>/events')
+api.add_resource(Users, '/api/users')
+api.add_resource(Login, '/api/login')
+api.add_resource(Events, '/api/events')
+api.add_resource(EventById, '/api/events/<int:id>')
+api.add_resource(Tickets, '/api/tickets')
+api.add_resource(TicketById, '/api/tickets/<int:id>')
+api.add_resource(UserTickets, '/api/users/<int:user_id>/tickets')
+api.add_resource(UserEvents, '/api/users/<int:user_id>/events')
 
 # Initialize database tables (only in development)
 if not os.environ.get('DATABASE_URL'):
@@ -209,3 +209,13 @@ if not os.environ.get('DATABASE_URL'):
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=False)
+
+# Health check endpoint
+@app.route('/health')
+def health_check():
+    return {'status': 'healthy'}, 200
+
+# Test endpoint
+@app.route('/api/test')
+def test():
+    return {'message': 'Backend is working!'}, 200
